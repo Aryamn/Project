@@ -24,7 +24,7 @@ class Cycle(db.Model):
     time_slot = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     features = db.Column(db.Text)
     reg_no = db.Column(db.String(20), nullable=False, unique=True)
-    image_file = db.Column(db.String(20), nullable=False, default='cyc.png')
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     price = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer , db.ForeignKey('user.id') , nullable = False)
     
