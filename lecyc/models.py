@@ -21,7 +21,7 @@ class User(db.Model , UserMixin):
 class Cycle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    time_slot = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    time_slot = db.Column(db.String(20), nullable=False, default=datetime.utcnow)
     features = db.Column(db.Text)
     reg_no = db.Column(db.String(20), nullable=False, unique=True)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')

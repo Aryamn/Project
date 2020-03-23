@@ -2,8 +2,8 @@ import random
 import os
 from PIL import Image
 from lecyc.models import User, Cycle
-from lecyc.form import RegistrationForm, LoginForm, UpdateAccount
-from flask import render_template, url_for, flash, redirect, request
+from lecyc.form import RegistrationForm, LoginForm, UpdateAccount, PostForm
+from flask import abort, render_template, url_for, flash, redirect, request
 from lecyc import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -11,7 +11,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html')
+    posts = Cycle.query.all()
+    return render_template('home.html', posts=posts)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -95,3 +96,64 @@ def account():
 
     image_file = url_for('static', filename=current_user.image_file)
     return render_template('account.html', title='account', image_file=image_file, form=form)
+
+
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
+                     features=form.features.data, reg_no=form.reg_no.data, price=form.price.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    return render_template("create_post.html", title="New Post", form=form)
+
+
+@app.route("/post/<post_id>")
+def post(post_id):
+    post = Cycle.query.get_or_404(post_id)
+    return render_template("post.html", title=post.title, post=post)
+
+
+@app.route("/post/<post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Cycle.query.get_or_404(post_id)
+
+    if post.author != current_user:
+        abort(403)
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.features = form.features.data
+        post.price = form.price.data
+        post.time_slot = form.time_slot.data
+        post.reg_no = form.reg_no.data
+        db.session.commit()
+        return redirect(url_for('post',post_id=post.id))
+
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.features.data = post.features
+        form.time_slot.data = post.time_slot
+        form.reg_no.data = post.reg_no
+        form.price.data = post.price
+
+    return render_template("create_post.html", title="New Post", form=form)
+
+@app.route("/post/<post_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_post(post_id):
+    post = Cycle.query.get_or_404(post_id)
+
+    if post.author != current_user:
+        abort(403)
+
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('home'))

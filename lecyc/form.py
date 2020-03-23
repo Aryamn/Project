@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField , FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField , TextAreaField,IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo ,ValidationError
 from lecyc.models import User
 
@@ -64,3 +64,13 @@ class UpdateAccount(FlaskForm):
                 raise ValidationError("Email is taken . Please choose another")
                 # print("Username is taken . Please choose another")
             
+        
+class PostForm(FlaskForm):
+    title = StringField('Title',validators=[DataRequired()])
+    time_slot = StringField('Time Slot',validators=[DataRequired()])
+    features = TextAreaField('features')
+    reg_no = StringField('Registration Number' , validators=[DataRequired()])
+    #do image
+    price = IntegerField('Price', validators=[DataRequired()])
+    #option to sell or buy
+    submit = SubmitField("Post")
