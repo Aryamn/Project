@@ -74,3 +74,20 @@ class PostForm(FlaskForm):
     price = IntegerField('Price', validators=[DataRequired()])
     #option to sell or buy
     submit = SubmitField("Post")
+
+class RequestResetForm(FlaskForm):
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    submit = SubmitField(" Request Password Reset ")
+
+    def validate_email(self,email):
+            error = User.query.filter_by(email=email.data).first()
+
+            if error is None:
+                raise ValidationError("No account with that email . Please Register first")
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')
