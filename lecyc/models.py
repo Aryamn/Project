@@ -46,3 +46,6 @@ class Cycle(db.Model):
                            default='default.jpg')
     price = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    ratings = db.Column(db.Integer , default = 0)
+    sell = db.Column(db.Boolean , default=False)
+    lend = db.Column(db.Boolean , default=False)

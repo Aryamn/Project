@@ -72,7 +72,8 @@ class PostForm(FlaskForm):
     reg_no = StringField('Registration Number' , validators=[DataRequired()])
     #do image
     price = IntegerField('Price', validators=[DataRequired()])
-    #option to sell or buy
+    sell = BooleanField('sell')
+    lend = BooleanField('lend')
     submit = SubmitField("Post")
 
 class RequestResetForm(FlaskForm):
@@ -91,3 +92,7 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+class Ratings(FlaskForm):
+    rating = IntegerField('Rating')
+    submit = SubmitField('Update rating')

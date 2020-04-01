@@ -37,6 +37,24 @@
         <p>{{post.features}}</p>
         <p>{{post.reg_no}}</p>
         <p>{{post.price}}</p>
+        <p>{{post.ratings}}</p>
+        <div>
+            {% if post.sell%}
+                <p>Status : Sell</p>
+            {% else %}
+                <p>Status : Lend</p>
+            {% endif%}
+        </div>
+
+        <form action="" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="container">
+                {{form.rating.label}}
+                {{form.rating}}
+                {{form.submit(class="button")}}
+            </div>
+        </form>
+
         <a href="{{url_for('update_post', post_id=post.id)}} " class="button">Update</a>
         <a href="{{url_for('delete_post', post_id=post.id)}} " class="delbutton">Delete</a>
     </div>

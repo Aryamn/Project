@@ -3,7 +3,7 @@ import os
 from PIL import Image
 from lecyc.models import User, Cycle
 from lecyc.form import (RegistrationForm, LoginForm, UpdateAccount
-                        , PostForm , RequestResetForm , ResetPasswordForm)
+                        , PostForm , RequestResetForm , ResetPasswordForm,Ratings)
 from flask import abort, render_template, url_for, flash, redirect, request
 from lecyc import app, db, bcrypt , mail
 from flask_login import login_user, current_user, logout_user, login_required
@@ -105,19 +105,23 @@ def account():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
-                     features=form.features.data, reg_no=form.reg_no.data, price=form.price.data, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        return redirect(url_for('home'))
+        if form.sell.data != form.lend.data:
+            post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
+                     features=form.features.data, reg_no=form.reg_no.data, 
+                     price=form.price.data, author=current_user , sell=form.sell.data,lend=form.lend.data)
+            db.session.add(post)
+            db.session.commit()
+            return redirect(url_for('home'))
+
+            #flash message here
 
     return render_template("create_post.html", title="New Post", form=form)
 
 
-@app.route("/post/<post_id>")
-def post(post_id):
-    post = Cycle.query.get_or_404(post_id)
-    return render_template("post.html", title=post.title, post=post)
+# @app.route("/post/<post_id>")
+# def post(post_id):
+#     post = Cycle.query.get_or_404(post_id)
+#     return render_template("post.html", title=post.title, post=post)
 
 
 @app.route("/post/<post_id>/update", methods=['GET', 'POST'])
@@ -136,6 +140,8 @@ def update_post(post_id):
         post.price = form.price.data
         post.time_slot = form.time_slot.data
         post.reg_no = form.reg_no.data
+        post.sell = form.sell.data
+        post.lend = form.lend.data
         db.session.commit()
         return redirect(url_for('post',post_id=post.id))
 
@@ -145,6 +151,8 @@ def update_post(post_id):
         form.time_slot.data = post.time_slot
         form.reg_no.data = post.reg_no
         form.price.data = post.price
+        form.sell.data = post.sell
+        form.lend.data = post.lend
 
     return render_template("create_post.html", title="New Post", form=form)
 
@@ -207,3 +215,18 @@ def reset_token(token):
         print('done')
         return redirect(url_for("login"))
     return render_template('reset_token.html',title='Reset Password', form=form)
+
+@app.route("/post/<post_id>",methods = [ 'GET', 'POST' ])
+@login_required
+def post(post_id):
+    post = Cycle.query.get_or_404(post_id)
+    form = Ratings()
+
+    if form.validate_on_submit():
+        if form.rating.data:
+            post.ratings += (form.rating.data/5)
+            db.session.commit()
+            return redirect(url_for("post",post_id=post.id))
+
+    return render_template("post.html", title=post.title, post=post,form=form)    
+
