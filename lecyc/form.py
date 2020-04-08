@@ -71,6 +71,7 @@ class PostForm(FlaskForm):
     features = TextAreaField('features')
     reg_no = StringField('Registration Number' , validators=[DataRequired()])
     #do image
+    image = FileField('Upload Cycle picture', validators=[FileAllowed(['jpg','png','jpeg'])])
     price = IntegerField('Price', validators=[DataRequired()])
     sell = BooleanField('sell')
     lend = BooleanField('lend')

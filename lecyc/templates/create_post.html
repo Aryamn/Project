@@ -162,13 +162,24 @@
 </head>
 
 <body>
-
-    <form class="modal-content animate" action="" method="POST">
+    <img src="{{image_file}}">
+    <form class="modal-content animate" action="" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="imgcontainer">
         </div>
 
         <div class="container">
+
+            {{form.image.label()}}
+            {{form.image}}
+            {% if form.image.errors %}
+                {% for error in form.image.errors %}
+                    <span>{{error}}</span><br>
+                {% endfor %}
+            {%endif%}
+
+            <br>
+
             {{form.title.label}}
             {{form.title}}
 

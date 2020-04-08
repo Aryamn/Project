@@ -66,9 +66,23 @@ def save_picture(form_picture):
     random_hex = str(random.randint(0, 123456789123456789))
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static', picture_fn)
+    picture_path = os.path.join(app.root_path, 'static/profile_pic', picture_fn)
 
     output_size = (125, 125)
+    f = Image.open(form_picture)
+    f.thumbnail(output_size)
+
+    f.save(picture_path)
+
+    return picture_fn
+
+def save_picture_post(form_picture):
+    random_hex = str(random.randint(0, 123456789123456789))
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/post_pic', picture_fn)
+
+    output_size = (250, 250)
     f = Image.open(form_picture)
     f.thumbnail(output_size)
 
@@ -96,7 +110,7 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    image_file = url_for('static', filename=current_user.image_file)
+    image_file = url_for('static', filename='profile_pic/'+current_user.image_file)
     return render_template('account.html', title='account', image_file=image_file, form=form)
 
 
@@ -104,17 +118,20 @@ def account():
 @login_required
 def new_post():
     form = PostForm()
+    picture_file = ""
     if form.validate_on_submit():
         if form.sell.data != form.lend.data:
+            picture_file = save_picture_post(form.image.data)
             post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
                      features=form.features.data, reg_no=form.reg_no.data, 
-                     price=form.price.data, author=current_user , sell=form.sell.data,lend=form.lend.data)
+                     price=form.price.data, author=current_user , sell=form.sell.data,lend=form.lend.data,image_file=picture_file)
             db.session.add(post)
             db.session.commit()
             return redirect(url_for('home'))
+            
 
             #flash message here
-
+    
     return render_template("create_post.html", title="New Post", form=form)
 
 
@@ -135,6 +152,9 @@ def update_post(post_id):
     form = PostForm()
 
     if form.validate_on_submit():
+        if form.image.data:
+            picture_file = save_picture_post(form.image.data)
+            post.image_file = picture_file
         post.title = form.title.data
         post.features = form.features.data
         post.price = form.price.data
@@ -153,8 +173,10 @@ def update_post(post_id):
         form.price.data = post.price
         form.sell.data = post.sell
         form.lend.data = post.lend
+        form.image.data = post.image_file
 
-    return render_template("create_post.html", title="New Post", form=form)
+    image_file = url_for('static', filename='post_pic/'+post.image_file)
+    return render_template("create_post.html", title="New Post", form=form, image_file=image_file)
 
 @app.route("/post/<post_id>/delete", methods=['GET', 'POST'])
 @login_required
