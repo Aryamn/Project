@@ -61,12 +61,16 @@
             <a href="{{url_for('delete_post', post_id=post.id)}} " class="delbutton">Delete</a>
 
         {% endif %}
+
+        {% if (post.author!=current_user) and (post.status==True) %}
              <a href="{{url_for('payment', post_id=post.id)}} " class="button">Pay</a>
+        {% endif %}
 
-
+        {% if (post.author==current_user) and (post.status==False) %}
+            <a href="{{url_for('confirm', post_id=post.id)}} " class="button">Cycle has been returned</a>
+        {% endif %}
     </div>
 
 
 </body>
-
 </html>

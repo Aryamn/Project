@@ -50,3 +50,4 @@ class Cycle(db.Model):
     ratings = db.Column(db.Integer , default = 0)
     sell = db.Column(db.Boolean , default=False)
     lend = db.Column(db.Boolean , default=False)
+    status = db.Column(db.Boolean , default=True)

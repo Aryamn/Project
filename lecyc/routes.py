@@ -303,4 +303,20 @@ def charge(post_id):
         currency='INR',
         description=post.title
     )
+
+    post.status=False
+    db.session.commit()
+
     return render_template('charge.html', amount=amount)
+
+@app.route("/post/<post_id>/confirm",methods=['POST','GET'])
+@login_required
+def confirm(post_id):
+    post = Cycle.query.get_or_404(post_id)
+    post.status=True
+    db.session.commit()
+
+    return redirect(url_for('home'))
+
+    
+
