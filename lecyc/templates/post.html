@@ -55,8 +55,15 @@
             </div>
         </form>
 
-        <a href="{{url_for('update_post', post_id=post.id)}} " class="button">Update</a>
-        <a href="{{url_for('delete_post', post_id=post.id)}} " class="delbutton">Delete</a>
+        {% if post.author==current_user %}
+
+            <a href="{{url_for('update_post', post_id=post.id)}} " class="button">Update</a>
+            <a href="{{url_for('delete_post', post_id=post.id)}} " class="delbutton">Delete</a>
+
+        {% endif %}
+             <a href="{{url_for('payment', post_id=post.id)}} " class="button">Pay</a>
+
+
     </div>
 
 

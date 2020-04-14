@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 import os
+import stripe
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '2912d4c2b6692117365c6cea'

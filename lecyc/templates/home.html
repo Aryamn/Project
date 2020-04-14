@@ -36,6 +36,7 @@
     <p>{{post.features}}</p>
     <p>{{post.reg_no}}</p>
     <p>{{post.price}}</p>
+    <p><a href="{{url_for('user_posts',username=post.author.username)}}">Posted By: {{post.author.username}}</a><p>
   </div>
 
   {% endfor %}

@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False,
                            default='default.png')
+    # name = db.Column(db.String(100),nullable=False)
     # hall = db.Column(db.String(100), nullable=False)
     # roll_no = db.Column(db.String(10), unique=True, nullable=False)
     # mobile_no = db.Column(db.Integer, unique=True, nullable=False)

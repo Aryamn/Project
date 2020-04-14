@@ -1,19 +1,21 @@
 import random
 import os
+import stripe
 from PIL import Image
 from lecyc.models import User, Cycle
-from lecyc.form import (RegistrationForm, LoginForm, UpdateAccount
-                        , PostForm , RequestResetForm , ResetPasswordForm,Ratings)
+from lecyc.form import (RegistrationForm, LoginForm, UpdateAccount,
+                        PostForm, RequestResetForm, ResetPasswordForm, Ratings)
 from flask import abort, render_template, url_for, flash, redirect, request
-from lecyc import app, db, bcrypt , mail
+from lecyc import app, db, bcrypt, mail
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+
 @app.route("/")
-@app.route("/home") #Cycles.order_by(Post.ratings.desc())
+@app.route("/home")  # Cycles.order_by(Post.ratings.desc())
 def home():
-    page = request.args.get('page',1,type=int)
-    posts = Cycle.query.paginate(page = page , per_page=5)
+    page = request.args.get('page', 1, type=int)
+    posts = Cycle.query.paginate(page=page, per_page=5)
     return render_template('home.html', posts=posts)
 
 
@@ -66,7 +68,8 @@ def save_picture(form_picture):
     random_hex = str(random.randint(0, 123456789123456789))
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/profile_pic', picture_fn)
+    picture_path = os.path.join(
+        app.root_path, 'static/profile_pic', picture_fn)
 
     output_size = (125, 125)
     f = Image.open(form_picture)
@@ -75,6 +78,7 @@ def save_picture(form_picture):
     f.save(picture_path)
 
     return picture_fn
+
 
 def save_picture_post(form_picture):
     random_hex = str(random.randint(0, 123456789123456789))
@@ -110,7 +114,8 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    image_file = url_for('static', filename='profile_pic/'+current_user.image_file)
+    image_file = url_for(
+        'static', filename='profile_pic/'+current_user.image_file)
     return render_template('account.html', title='account', image_file=image_file, form=form)
 
 
@@ -121,16 +126,22 @@ def new_post():
     picture_file = ""
     if form.validate_on_submit():
         if form.sell.data != form.lend.data:
-            picture_file = save_picture_post(form.image.data)
-            post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
+            if form.image.data:
+                picture_file = save_picture_post(form.image.data)
+                post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
+                     features=form.features.data, reg_no=form.reg_no.data,
+                     price=form.price.data, author=current_user, sell=form.sell.data, lend=form.lend.data, image_file=picture_file)
+            else:
+                post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
                      features=form.features.data, reg_no=form.reg_no.data, 
-                     price=form.price.data, author=current_user , sell=form.sell.data,lend=form.lend.data,image_file=picture_file)
+                     price=form.price.data, author=current_user , sell=form.sell.data,lend=form.lend.data)
+           
             db.session.add(post)
             db.session.commit()
             return redirect(url_for('home'))
             
 
-            #flash message here
+            # flash message here
     
     return render_template("create_post.html", title="New Post", form=form)
 
@@ -210,7 +221,7 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
-        #flash that email has been sent
+        # flash that email has been sent
         return redirect(url_for('login'))
     return render_template('reset_request.html',title='Reset Password', form=form)
 
@@ -223,7 +234,7 @@ def reset_token(token):
     user = User.verify_reset_token(token)
     
     if user==None:
-        #this is an invalid and expired token generate a warning
+        # this is an invalid and expired token generate a warning
         return redirect(url_for('reset_request'))
 
     form = ResetPasswordForm()
@@ -233,7 +244,7 @@ def reset_token(token):
         
         user.password = hashed_password
         db.session.commit()
-        #your password has been updated
+        # your password has been updated
         print('done')
         return redirect(url_for("login"))
     return render_template('reset_token.html',title='Reset Password', form=form)
@@ -252,3 +263,44 @@ def post(post_id):
 
     return render_template("post.html", title=post.title, post=post,form=form)    
 
+
+@app.route("/user/<string:username>")  # Cycles.order_by(Post.ratings.desc())
+def user_posts(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Cycle.query.filter_by(author=user).paginate(page=page, per_page=5)
+    return render_template('user_posts.html', posts=posts , user=user)
+
+
+stripe_keys = {
+  'secret_key': 'sk_test_yga6FQ5RcHpHwn93UFEN1E3i004K23V7XU',
+  'publishable_key': 'pk_test_H7xCQ8458Q2adRXHB17C24jU00b9y1Yi7T'
+}
+
+stripe.api_key = stripe_keys['secret_key']
+
+
+@app.route("/post/<post_id>/payment",methods=['POST','GET'])
+@login_required
+def payment(post_id):
+    post = Cycle.query.get_or_404(post_id)
+    return render_template('payment.html',key=stripe_keys['publishable_key'],post=post)
+
+@app.route("/post/<post_id>/charge", methods=['POST'])
+def charge(post_id):
+    post = Cycle.query.get_or_404(post_id)
+
+    amount = post.price*100
+
+    customer = stripe.Customer.create(
+        email=request.form['stripeEmail'],
+        source=request.form['stripeToken']
+    )
+
+    stripe.Charge.create(
+        customer=customer.id,
+        amount=amount,
+        currency='INR',
+        description=post.title
+    )
+    return render_template('charge.html', amount=amount)
