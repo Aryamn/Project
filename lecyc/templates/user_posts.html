@@ -34,7 +34,10 @@
   <div>
     <img src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}">
     <p><a href="{{url_for('post' , post_id = post.id)}}">{{post.title}}</a></p>
-    <p>{{post.time_slot}}</p>
+    <p>{{post.date_avail}}</p>
+    <p>{{post.month_avail}}</p>
+    <p>{{post.time_slot_start}} {{post.time_slot_meri_start}}</p>
+    <p>{{post.time_slot_end}} {{post.time_slot_meri_end}}</p>
     <p>{{post.features}}</p>
     <p>{{post.reg_no}}</p>
     <p>{{post.price}}</p>

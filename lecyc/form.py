@@ -13,6 +13,12 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
+                                    
+    name = StringField('Name',validators=[DataRequired()])
+    roll_no = StringField('Roll No.',validators=[DataRequired()])
+    hall = StringField('Hall Name',validators=[DataRequired()])
+    mobile_no = StringField('Mobile No.',validators=[DataRequired()])
+
     submit = SubmitField('Sign Up')
 
     def validate_username(self,username):
@@ -49,6 +55,11 @@ class UpdateAccount(FlaskForm):
 
     submit = SubmitField('Update')
 
+    name = StringField('Name',validators=[DataRequired()])
+    roll_no = StringField('Roll No.',validators=[DataRequired()])
+    hall = StringField('Hall Name',validators=[DataRequired()])
+    mobile_no = StringField('Mobile No.',validators=[DataRequired()])
+
     def validate_username(self,username):
         if username.data != current_user.username :
             user = User.query.filter_by(username=username.data).first()
@@ -67,10 +78,19 @@ class UpdateAccount(FlaskForm):
         
 class PostForm(FlaskForm):
     title = StringField('Title',validators=[DataRequired()])
-    time_slot = StringField('Time Slot',validators=[DataRequired()])
+    time_slot_start = IntegerField('Start Time',validators=[DataRequired()])
+    time_slot_end = IntegerField('End Time',validators=[DataRequired()])
+
+    time_slot_meri_start = StringField('Meridian',validators=[DataRequired()])
+
+    time_slot_meri_end = StringField('Meridian',validators=[DataRequired()])
+
+    date_avail = IntegerField('Date',validators=[DataRequired()])
+
+    month_avail = IntegerField('Month',validators=[DataRequired()])
+
     features = TextAreaField('features')
     reg_no = StringField('Registration Number' , validators=[DataRequired()])
-    #do image
     image = FileField('Upload Cycle picture', validators=[FileAllowed(['jpg','png','jpeg'])])
     price = IntegerField('Price', validators=[DataRequired()])
     sell = BooleanField('sell')

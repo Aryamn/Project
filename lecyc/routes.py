@@ -29,7 +29,8 @@ def register():
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
         user = User(username=form.username.data,
-                    email=form.email.data, password=hashed_password)
+                    email=form.email.data, password=hashed_password,name=form.name.data,hall=form.hall.data,
+                    roll_no=form.roll_no.data,mobile_no=form.mobile_no.data)
         db.session.add(user)
         db.session.commit()
 
@@ -107,12 +108,21 @@ def account():
 
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.name = form.name.data
+        current_user.roll_no = form.roll_no.data
+        current_user.mobile_no = form.mobile_no.data
+        current_user.hall = form.hall.data
+
         db.session.commit()
         return redirect(url_for('account'))
 
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.name.data = current_user.name
+        form.hall.data = current_user.hall
+        form.roll_no.data = current_user.roll_no
+        form.mobile_no.data = current_user.mobile_no
 
     image_file = url_for(
         'static', filename='profile_pic/'+current_user.image_file)
@@ -128,13 +138,19 @@ def new_post():
         if form.sell.data != form.lend.data:
             if form.image.data:
                 picture_file = save_picture_post(form.image.data)
-                post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
-                     features=form.features.data, reg_no=form.reg_no.data,
-                     price=form.price.data, author=current_user, sell=form.sell.data, lend=form.lend.data, image_file=picture_file)
+                post = Cycle(title=form.title.data, time_slot_start=form.time_slot_start.data,
+                            time_slot_end=form.time_slot_end.data, time_slot_meri_start=form.time_slot_meri_start.data,
+                            time_slot_meri_end = form.time_slot_meri_end.data,
+                            month_avail=form.month_avail.data , date_avail=form.date_avail.data,
+                            features=form.features.data, reg_no=form.reg_no.data,
+                            price=form.price.data, author=current_user, sell=form.sell.data, lend=form.lend.data, image_file=picture_file)
             else:
-                post = Cycle(title=form.title.data, time_slot=form.time_slot.data,
-                     features=form.features.data, reg_no=form.reg_no.data, 
-                     price=form.price.data, author=current_user , sell=form.sell.data,lend=form.lend.data)
+                post = Cycle(title=form.title.data, time_slot_start=form.time_slot_start.data,
+                            time_slot_end=form.time_slot_end.data, time_slot_meri_start = form.time_slot_meri_start.data,
+                            time_slot_meri_end = form.time_slot_meri_end.data,
+                            month_avail=form.month_avail.data , date_avail=form.date_avail.data,
+                            features=form.features.data, reg_no=form.reg_no.data,
+                            price=form.price.data, author=current_user, sell=form.sell.data, lend=form.lend.data)
            
             db.session.add(post)
             db.session.commit()
@@ -169,7 +185,13 @@ def update_post(post_id):
         post.title = form.title.data
         post.features = form.features.data
         post.price = form.price.data
-        post.time_slot = form.time_slot.data
+
+        post.time_slot_start = form.time_slot_start.data
+        post.time_slot_end = form.time_slot_end.data
+        post.time_slot_meri = form.time_slot_meri.data
+        post.month_avail = form.month_avail.data
+        post.date_avail = form.date_avail.data
+
         post.reg_no = form.reg_no.data
         post.sell = form.sell.data
         post.lend = form.lend.data
@@ -179,7 +201,14 @@ def update_post(post_id):
     elif request.method == 'GET':
         form.title.data = post.title
         form.features.data = post.features
-        form.time_slot.data = post.time_slot
+
+        form.time_slot_start.data = post.time_slot_start
+        form.time_slot_end.data = post.time_slot_end
+        form.time_slot_meri.data = post.time_slot_meri
+        form.date_avail.data = post.date_avail
+        form.month_avail.data = post.month_avail
+        
+
         form.reg_no.data = post.reg_no
         form.price.data = post.price
         form.sell.data = post.sell

@@ -15,10 +15,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False,
                            default='default.png')
-    # name = db.Column(db.String(100),nullable=False)
-    # hall = db.Column(db.String(100), nullable=False)
-    # roll_no = db.Column(db.String(10), unique=True, nullable=False)
-    # mobile_no = db.Column(db.Integer, unique=True, nullable=False)
+    name = db.Column(db.String(100),nullable=False)
+    hall = db.Column(db.String(100), nullable=False)
+    roll_no = db.Column(db.String(10), unique=True, nullable=False)
+    mobile_no = db.Column(db.Integer, unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     cycles = db.relationship('Cycle', backref='author', lazy=True)
 
@@ -39,8 +39,19 @@ class User(db.Model, UserMixin):
 class Cycle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    time_slot = db.Column(db.String(20), nullable=False,
-                          default=datetime.utcnow)
+
+    date_avail = db.Column(db.Integer,nullable=False,default=1)
+    month_avail = db.Column(db.Integer,nullable=False,default=1)
+
+    time_slot_start = db.Column(db.Integer, nullable=False,
+                          default=1)
+
+    time_slot_end = db.Column(db.Integer, nullable=False,
+                          default=2)
+
+    time_slot_meri_start = db.Column(db.String(4),nullable=False,default='am')
+    time_slot_meri_end = db.Column(db.String(4),nullable=False,default='am')
+
     features = db.Column(db.Text)
     reg_no = db.Column(db.String(20), nullable=False, unique=True)
     image_file = db.Column(db.String(20), nullable=False,
@@ -51,3 +62,4 @@ class Cycle(db.Model):
     sell = db.Column(db.Boolean , default=False)
     lend = db.Column(db.Boolean , default=False)
     status = db.Column(db.Boolean , default=True)
+    date_posted = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
