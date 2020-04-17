@@ -1,62 +1,32 @@
-<!DOCTYPE html>
-<html>
 
-<head>
-  <title>Our Company</title>
-  <style>
-    .button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
+{% extends "layout.html" %}
+{% block content %}
+{%for post in posts.items%}
 
-    .delbutton {
-      background-color: #ff3300;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-  </style>
-</head>
-
-<body>
-  {%for post in posts.items%}
-
-  <div>
-    <img src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}">
-    <p><a href="{{url_for('post' , post_id = post.id)}}">{{post.title}}</a></p>
-    <p>{{post.date_avail}}</p>
-    <p>{{post.month_avail}}</p>
-    
-    <p>{{post.time_slot_start}} {{post.time_slot_meri_start}}</p>
-    <p>{{post.time_slot_end}} {{post.time_slot_meri_end}}</p> 
-    <p>{{post.features}}</p>
-    <p>{{post.reg_no}}</p>
-    <p>{{post.price}}</p>
-    <p><a href="{{url_for('user_posts',username=post.author.username)}}">Posted By: {{post.author.username}}</a><p>
+<div container>
+  <div class="card bg-light" style="width:20rem;">
+    <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
+      style="width:100%">
+    <div class="card-body">
+      <h4 class="card-title">{{post.title}}</h4>
+      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>
+      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-dark">{{post.price}} Rs/hr</a>   
+     </div>
   </div>
+  <br>
+</div>
 
-  {% endfor %}
+{% endfor %}
 
-  {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
-    {% if page_num %}
-      {% if posts.page==page_num %}
-        <a class="delbutton" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
-      {%else%}
-        <a class="button" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
-      {% endif %}
-    {%else%}
-    ...
-    {% endif %}
-  {% endfor %}
-
-</body>
-
-</html>
+{% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+{% if page_num %}
+{% if posts.page==page_num %}
+<a class="btn btn-primary" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+{%else%}
+<a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+{% endif %}
+{%else%}
+...
+{% endif %}
+{% endfor %}
+{% endblock content %}

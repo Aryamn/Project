@@ -45,7 +45,7 @@ def register():
                     roll_no=form.roll_no.data,mobile_no=form.mobile_no.data)
         db.session.add(user)
         db.session.commit()
-
+        flash('Your account has been created! You are now able to login','success')
         print('done')
         return redirect(url_for("login"))
 
@@ -66,7 +66,8 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('home'))
 
         else:
-            return redirect(url_for('login'))
+            flash('Login Unsuccesfull. Please check your email and password','danger')
+           
 
     return render_template('login.html', title='login', form=form)
 
@@ -126,6 +127,7 @@ def account():
         current_user.hall = form.hall.data
 
         db.session.commit()
+        flash('Your account has been updated!', 'success')
         return redirect(url_for('account'))
 
     elif request.method == 'GET':
@@ -166,11 +168,8 @@ def new_post():
            
             db.session.add(post)
             db.session.commit()
+            flash('Your post has been created!', 'success')
             return redirect(url_for('home'))
-            
-
-            # flash message here
-    
     return render_template("create_post.html", title="New Post", form=form)
 
 
@@ -208,6 +207,7 @@ def update_post(post_id):
         post.sell = form.sell.data
         post.lend = form.lend.data
         db.session.commit()
+        flash('Your post has been updated!', 'success')
         return redirect(url_for('post',post_id=post.id))
 
     elif request.method == 'GET':
@@ -240,6 +240,7 @@ def delete_post(post_id):
 
     db.session.delete(post)
     db.session.commit()
+    flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
 
 def send_reset_email(user):
@@ -262,7 +263,7 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
-        # flash that email has been sent
+        flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
     return render_template('reset_request.html',title='Reset Password', form=form)
 
@@ -275,7 +276,7 @@ def reset_token(token):
     user = User.verify_reset_token(token)
     
     if user==None:
-        # this is an invalid and expired token generate a warning
+        flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('reset_request'))
 
     form = ResetPasswordForm()
@@ -285,7 +286,7 @@ def reset_token(token):
         
         user.password = hashed_password
         db.session.commit()
-        # your password has been updated
+        flash('Your password has been updated! You are now able to log in', 'success')
         print('done')
         return redirect(url_for("login"))
     return render_template('reset_token.html',title='Reset Password', form=form)
