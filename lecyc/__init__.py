@@ -21,3 +21,7 @@ app.config['MAIL_PASSWORD'] = "Vicky26jan"
 mail = Mail(app)
 
 from lecyc import routes
+from lecyc.errors.handlers import errors
+app.register_blueprint(errors)
+
+# return app
