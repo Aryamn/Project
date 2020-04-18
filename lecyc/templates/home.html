@@ -1,22 +1,28 @@
-
 {% extends "layout.html" %}
 {% block content %}
+<div class="mx-auto"  style="width: 80rem;">
+<div class="card-columns">
 {%for post in posts.items%}
-
-<div container>
-  <div class="card bg-light" style="width:20rem;">
+  <div class="card bg-light" style="width: 18rem;" >
     <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
       style="width:100%">
     <div class="card-body">
-      <h4 class="card-title">{{post.title}}</h4>
-      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>
+      <h5 class="card-title">{{post.title}}</h4>
+      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>      
       <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-dark">{{post.price}} Rs/hr</a>   
-     </div>
+      
+      <p class="card-text"></p>
+      <p class="card-text"><small class="text-muted">{{post.author.hall}}</small>
+      <br>
+        <small class="text-muted">
+        {{post.time_slot_start}} {{post.time_slot_meri_start}} - {{post.time_slot_end}} {{post.time_slot_meri_end}}
+      </small>
+      </p>
+    </div>
   </div>
-  <br>
+{% endfor %}
 </div>
 
-{% endfor %}
 
 {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
 {% if page_num %}
@@ -29,4 +35,5 @@
 ...
 {% endif %}
 {% endfor %}
+</div>
 {% endblock content %}

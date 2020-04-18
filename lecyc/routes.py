@@ -15,19 +15,19 @@ from flask_mail import Message
 @app.route("/home")  # Cycles.order_by(Post.ratings.desc())
 def home():
     page = request.args.get('page', 1, type=int)
-    posts = Cycle.query.order_by(Cycle.date_posted.desc()).paginate(page=page, per_page=5)
+    posts = Cycle.query.order_by(Cycle.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('home.html', posts=posts)
 
 @app.route("/home/start_time")  # Cycles.order_by(Post.ratings.desc())
 def hometime():
     page = request.args.get('page', 1, type=int)
-    posts = Cycle.query.order_by(Cycle.date_avail.desc()).order_by(Cycle.time_slot_start.desc()).paginate(page=page, per_page=5)
+    posts = Cycle.query.order_by(Cycle.date_avail.desc()).order_by(Cycle.time_slot_start.desc()).paginate(page=page, per_page=15)
     return render_template('home.html', posts=posts)
 
 @app.route("/home/ratings")  # Cycles.order_by(Post.ratings.desc())
 def homerate():
     page = request.args.get('page', 1, type=int)
-    posts = Cycle.query.order_by(Cycle.ratings.desc()).paginate(page=page, per_page=5)
+    posts = Cycle.query.order_by(Cycle.ratings.desc()).paginate(page=page, per_page=15)
     return render_template('home.html', posts=posts)
 
 
@@ -85,7 +85,7 @@ def save_picture(form_picture):
     picture_path = os.path.join(
         app.root_path, 'static/profile_pic', picture_fn)
 
-    output_size = (125, 125)
+    output_size = (250, 250)
     f = Image.open(form_picture)
     f.thumbnail(output_size)
 
@@ -100,7 +100,7 @@ def save_picture_post(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/post_pic', picture_fn)
 
-    output_size = (250, 250)
+    output_size = (800, 800)
     f = Image.open(form_picture)
     f.thumbnail(output_size)
 
@@ -171,13 +171,6 @@ def new_post():
             flash('Your post has been created!', 'success')
             return redirect(url_for('home'))
     return render_template("create_post.html", title="New Post", form=form)
-
-
-# @app.route("/post/<post_id>")
-# def post(post_id):
-#     post = Cycle.query.get_or_404(post_id)
-#     return render_template("post.html", title=post.title, post=post)
-
 
 @app.route("/post/<post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -310,7 +303,7 @@ def post(post_id):
 def user_posts(username):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
-    posts = Cycle.query.filter_by(author=user).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=5)
+    posts = Cycle.query.filter_by(author=user).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
     return render_template('user_posts.html', posts=posts , user=user)
 
 
