@@ -1,34 +1,15 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+{% block content %}
 
-<head>
-  <title>Our Company</title>
-  <style>
-    .button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <div class="text-center">
+    <h1 class="display-4">Error 500</h1>
+    <p class="lead">Page is Not working.Come Again Later</p>
+    <a class="btn btn-info btn-lg" href="{{url_for('home')}}" role="button">Home</a>
 
-    .delbutton {
-      background-color: #ff3300;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-  </style>
-</head>
+  </div>
+  </div>
+</div>
 
-<body>
-<p>Thanku</p>
-<p>Amount paid is rupees.</p>
-
-</body>
-</html>
+{% endblock content %}

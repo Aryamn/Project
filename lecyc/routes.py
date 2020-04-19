@@ -100,7 +100,7 @@ def save_picture_post(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/post_pic', picture_fn)
 
-    output_size = (800, 800)
+    output_size = (400, 400)
     f = Image.open(form_picture)
     f.thumbnail(output_size)
 
@@ -170,7 +170,7 @@ def new_post():
             db.session.commit()
             flash('Your post has been created!', 'success')
             return redirect(url_for('home'))
-    return render_template("create_post.html", title="New Post", form=form)
+    return render_template("create_post.html", title="New Post", form=form,legend='New Post')
 
 @app.route("/post/<post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -192,7 +192,8 @@ def update_post(post_id):
 
         post.time_slot_start = form.time_slot_start.data
         post.time_slot_end = form.time_slot_end.data
-        post.time_slot_meri = form.time_slot_meri.data
+        post.time_slot_meri_start = form.time_slot_meri_start.data
+        post.time_slot_meri_end = form.time_slot_meri_end.data
         post.month_avail = form.month_avail.data
         post.date_avail = form.date_avail.data
 
@@ -209,7 +210,8 @@ def update_post(post_id):
 
         form.time_slot_start.data = post.time_slot_start
         form.time_slot_end.data = post.time_slot_end
-        form.time_slot_meri.data = post.time_slot_meri
+        form.time_slot_meri_start.data = post.time_slot_meri_start
+        form.time_slot_meri_end.data = post.time_slot_meri_end
         form.date_avail.data = post.date_avail
         form.month_avail.data = post.month_avail
         
@@ -221,7 +223,7 @@ def update_post(post_id):
         form.image.data = post.image_file
 
     image_file = url_for('static', filename='post_pic/'+post.image_file)
-    return render_template("create_post.html", title="New Post", form=form, image_file=image_file)
+    return render_template("create_post.html", title="Update Post", form=form, image_file=image_file,legend='Update Post')
 
 @app.route("/post/<post_id>/delete", methods=['GET', 'POST'])
 @login_required

@@ -5,7 +5,7 @@
     <div class="modal-body row">
         <div class="col-lg-8 text-center ">
             <img src="{{url_for('static' , filename = 'post_pic/' + post.image_file)}}" class="rounded img-fluid"
-                style="width: 120rem;">
+                style="width: 100rem; height: 600px;">
         </div>
         <div class="col-lg-4  ">
             <div class="card">
@@ -54,7 +54,7 @@
                     {% endif %}
 
                     {% if (post.author==current_user) and (post.status==False) %}
-                    <a href="{{url_for('confirm', post_id=post.id)}} " class="btn btn-info">Return</a>
+                    <a href="{{url_for('confirm', post_id=post.id)}} " class="btn btn-info">Returned</a>
                     {% endif %}
                 </div>
             </div>

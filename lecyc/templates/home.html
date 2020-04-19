@@ -1,39 +1,44 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="mx-auto"  style="width: 80rem;">
-<div class="card-columns">
-{%for post in posts.items%}
-  <div class="card bg-light" style="width: 18rem;" >
-    <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
-      style="width:100%">
-    <div class="card-body">
-      <h5 class="card-title">{{post.title}}</h4>
-      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>      
-      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-dark">{{post.price}} Rs/hr</a>   
-      
-      <p class="card-text"></p>
-      <p class="card-text"><small class="text-muted">{{post.author.hall}}</small>
-      <br>
-        <small class="text-muted">
-        {{post.time_slot_start}} {{post.time_slot_meri_start}} - {{post.time_slot_end}} {{post.time_slot_meri_end}}
-      </small>
-      </p>
+<div class="mx-auto" style="width: 80rem;">
+  <div class="card-columns">
+    {%for post in posts.items%}
+    <div class="card bg-light" style="width: 18rem;">
+      <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
+        style="width:100% ; height:250px;">
+      <div class="card-body">
+        <h5 class="card-title">{{post.title}}</h5>
+        <div class="row">
+          <div class="col">
+            <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>
+          </div>
+          <div class="col">
+            <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-dark">{{post.price}} Rs/hr</a>
+          </div>
+        </div>
+        <p class="card-text"></p>
+        <p class="card-text"><small class="text-muted">{{post.author.hall}}</small>
+          <br>
+          <small class="text-muted">
+            {{post.time_slot_start}} {{post.time_slot_meri_start}} - {{post.time_slot_end}} {{post.time_slot_meri_end}}
+          </small>
+        </p>
+      </div>
     </div>
+    {% endfor %}
   </div>
-{% endfor %}
-</div>
 
 
-{% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
-{% if page_num %}
-{% if posts.page==page_num %}
-<a class="btn btn-primary" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
-{%else%}
-<a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
-{% endif %}
-{%else%}
-...
-{% endif %}
-{% endfor %}
+  {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+  {% if page_num %}
+  {% if posts.page==page_num %}
+  <a class="btn btn-primary" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+  {%else%}
+  <a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+  {% endif %}
+  {%else%}
+  ...
+  {% endif %}
+  {% endfor %}
 </div>
 {% endblock content %}
