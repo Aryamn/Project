@@ -81,13 +81,13 @@ class PostForm(FlaskForm):
     time_slot_start = IntegerField('Start Time',validators=[DataRequired()])
     time_slot_end = IntegerField('End Time',validators=[DataRequired()])
 
-    time_slot_meri_start = StringField('Meridian',validators=[DataRequired()])
+    time_slot_meri_start = StringField('Meridian',validators=[DataRequired()],render_kw={"placeholder":"am"})
 
-    time_slot_meri_end = StringField('Meridian',validators=[DataRequired()])
+    time_slot_meri_end = StringField('Meridian',validators=[DataRequired()],render_kw={"placeholder":"am"})
 
-    date_avail = IntegerField('Date',validators=[DataRequired()])
+    date_avail = IntegerField('Date',validators=[DataRequired()],render_kw={"placeholder":"20"})
 
-    month_avail = IntegerField('Month',validators=[DataRequired()])
+    month_avail = IntegerField('Month',validators=[DataRequired()],render_kw={"placeholder":"1"})
 
     features = TextAreaField('features')
     reg_no = StringField('Registration Number' , validators=[DataRequired()])

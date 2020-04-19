@@ -1,62 +1,56 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+{% block content %}
 
-<head>
-  <title>Our Company</title>
-  <style>
-    .button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .delbutton {
-      background-color: #ff3300;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-  </style>
-</head>
-
-<body>
-
-    <h1>Posts by {{user.username}} ({{posts.total}})</h1>
-
-  {%for post in posts.items%}
-  <div>
-    <img src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}">
-    <p><a href="{{url_for('post' , post_id = post.id)}}">{{post.title}}</a></p>
-    <p>{{post.date_avail}}</p>
-    <p>{{post.month_avail}}</p>
-    <p>{{post.time_slot_start}} {{post.time_slot_meri_start}}</p>
-    <p>{{post.time_slot_end}} {{post.time_slot_meri_end}}</p>
-    <p>{{post.features}}</p>
-    <p>{{post.reg_no}}</p>
-    <p>{{post.price}}</p>
+<div class="content-section mx-auto" style="width: 80rem;">
+  <div class="media bg-light rounded mb-4">
+    <img class="account-img mr-3" src="{{url_for('static' , filename = 'profile_pic/'+ user.image_file)}}">
+    <div class="media-body">
+      <h2 class="account-heading">{{ current_user.name }}</h2>
+      <p class="text-secondary">{{ current_user.username }}</p>
+      <p class="text-secondary">{{ current_user.email }}</p>
+      <p class="text-secondary">{{ current_user.hall }}</p>
+      <p class="text-secondary">{{ current_user.roll_no }}</p>
+      <p class="text-secondary">{{ current_user.mobile_no }}</p>
+    </div>
   </div>
+</div>
 
-  {% endfor %}
+<h3 class="mb-4 text-center">More Posts By {{user.name}} ({{posts.total}})</h3>
 
-  {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
-    {% if page_num %}
-      {% if posts.page==page_num %}
-        <a class="delbutton" href="{{url_for('user_posts',username=user.username ,page=page_num)}}">{{page_num}}</a>
-      {%else%}
-        <a class="button" href="{{url_for('user_posts',username=user.username ,page=page_num)}}">{{page_num}}</a>
-      {% endif %}
-    {%else%}
-    ...
-    {% endif %}
-  {% endfor %}
+<div class="mx-auto"  style="width: 80rem;">
+<div class="card-columns mx-auto">
+{%for post in posts.items%}
+  <div class="card bg-light mx-auto" style="width: 18rem;" >
+    <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
+      style="width:100%">
+    <div class="card-body">
+      <h5 class="card-title">{{post.title}}</h4>
+      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>      
+      <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-dark">{{post.price}} Rs/hr</a>   
+      
+      <p class="card-text"></p>
+      <p class="card-text"><small class="text-muted">{{post.author.hall}}</small>
+      <br>
+        <small class="text-muted">
+        {{post.time_slot_start}} {{post.time_slot_meri_start}} - {{post.time_slot_end}} {{post.time_slot_meri_end}}
+      </small>
+      </p>
+    </div>
+  </div>
+{% endfor %}
+</div>
 
-</body>
 
-</html>
+{% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+{% if page_num %}
+{% if posts.page==page_num %}
+<a class="btn btn-primary" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+{%else%}
+<a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+{% endif %}
+{%else%}
+...
+{% endif %}
+{% endfor %}
+</div>
+{% endblock content %}
