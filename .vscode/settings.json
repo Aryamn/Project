@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "proj/bin/python3.5",
+    "python.linting.enabled": false
+}

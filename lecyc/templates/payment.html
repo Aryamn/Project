@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="display-4">Payment Options</h2>
+<div class="jumbotron">
+  <form action="/post/{{post.id}}/charge" method='POST'>
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ key }}"
+      data-amount={{post.price*100}} data-name="Demo Site" data-description="Widget"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="auto">
+      </script>
+    <br>
+    <small>More options coming Soon!</small>
+  </form>
+</div>
+
+{% endblock content %}

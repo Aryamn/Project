@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <div class="text-center">
+    <h1 class="display-4">Error 404</h1>
+    <p class="lead">Try a different url</p>
+    <a class="btn btn-info btn-lg" href="{{url_for('home')}}" role="button">Home</a>
+
+  </div>
+  </div>
+</div>
+
+{% endblock content %}
