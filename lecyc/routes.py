@@ -284,19 +284,6 @@ def reset_token(token):
         return redirect(url_for("login"))
     return render_template('reset_token.html',title='Reset Password', form=form)
 
-@app.route("/post/<post_id>",methods = [ 'GET', 'POST' ])
-@login_required
-def post(post_id):
-    post = Cycle.query.get_or_404(post_id)
-    form = Ratings()
-
-    if form.validate_on_submit():
-        if form.rating.data:
-            post.ratings += (form.rating.data/5)
-            db.session.commit()
-            return redirect(url_for("post",post_id=post.id))
-
-    return render_template("post.html", title=post.title, post=post,form=form)    
 
 
 @app.route("/user/<string:username>")  # Cycles.order_by(Post.ratings.desc())
@@ -353,5 +340,20 @@ def confirm(post_id):
 
     return redirect(url_for('home'))
 
-    
+@app.route("/post/<post_id>",methods = [ 'GET', 'POST' ])
+@login_required
+def post(post_id):
+    post = Cycle.query.get_or_404(post_id)
+    return render_template("post.html", title=post.title, post=post)
 
+@app.route("/post/<post_id>/ratings/<number>",methods = [ 'GET', 'POST' ])
+def star(number,post_id):
+    post = Cycle.query.get_or_404(post_id)
+
+    if post.ratings==0:
+        post.ratings =  int (number)
+    else:
+        post.ratings =  (post.ratings+ int (number))/2
+        post.ratings = int(post.ratings)
+    db.session.commit()
+    return redirect(url_for('post',post_id=post.id))

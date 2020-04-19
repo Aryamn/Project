@@ -11,11 +11,38 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{post.title}}</h4>
-                    <span class="fa fa-star text-warning"></span>
-                    <span class="fa fa-star text-warning"></span>
-                    <span class="fa fa-star text-warning"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
+
+                    {{post.ratings}} out of 5 
+                    <br>
+                    {% if post.ratings >=1 %}
+                        <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %} 
+                        <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=2 %}
+                        <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                        <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=3 %}
+                        <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %} 
+                        <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=4 %}
+                        <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %} 
+                        <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=5 %}
+                        <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %} 
+                        <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
                 </div>
             </div>
 
@@ -89,17 +116,7 @@
                 </div>
             </div>
         </div>
-        <!-- update rating code -->
-
-
-        <!-- <form action="" method="POST">
-            {{ form.hidden_tag() }}
-         <div class="container">
-            {{form.rating.label}}
-            {{form.rating}}
-            {{form.submit(class="button")}}
-         </div>
-            </form> -->
+        
 
         {% if post.author==current_user %}
         <div class="modal-body row">
