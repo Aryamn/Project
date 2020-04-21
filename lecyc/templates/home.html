@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+</div>
 <div class="mx-auto" style="width: 80rem;">
   <div class="card-columns">
     {%for post in posts.items%}
@@ -29,10 +31,11 @@
   </div>
 
 
+<div class="text-center">
   {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
   {% if page_num %}
   {% if posts.page==page_num %}
-  <a class="btn btn-primary" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+  <a class="btn btn-success" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
   {%else%}
   <a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
   {% endif %}
@@ -40,5 +43,6 @@
   ...
   {% endif %}
   {% endfor %}
+</div>
 </div>
 {% endblock content %}

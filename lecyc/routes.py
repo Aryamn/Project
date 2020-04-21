@@ -30,6 +30,12 @@ def homerate():
     posts = Cycle.query.order_by(Cycle.ratings.desc()).paginate(page=page, per_page=15)
     return render_template('home.html', posts=posts)
 
+@app.route("/home/price")  # Cycles.order_by(Post.ratings.desc())
+def homeprice():
+    page = request.args.get('page', 1, type=int)
+    posts = Cycle.query.order_by(Cycle.price).paginate(page=page, per_page=15)
+    return render_template('home.html', posts=posts)
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -170,7 +176,8 @@ def new_post():
             db.session.commit()
             flash('Your post has been created!', 'success')
             return redirect(url_for('home'))
-    return render_template("create_post.html", title="New Post", form=form,legend='New Post')
+    image_file = url_for('static', filename='post_pic/default.jpg')
+    return render_template("create_post.html", title="New Post", form=form,legend='New Post',image_file=image_file)
 
 @app.route("/post/<post_id>/update", methods=['GET', 'POST'])
 @login_required
