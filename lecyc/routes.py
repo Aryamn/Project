@@ -4,7 +4,7 @@ import stripe
 from PIL import Image
 from lecyc.models import User, Cycle
 from lecyc.form import (RegistrationForm, LoginForm, UpdateAccount,
-                        PostForm, RequestResetForm, ResetPasswordForm, Ratings)
+                        PostForm, RequestResetForm, ResetPasswordForm, Ratings ,Search)
 from flask import abort, render_template, url_for, flash, redirect, request
 from lecyc import app, db, bcrypt, mail
 from flask_login import login_user, current_user, logout_user, login_required
@@ -301,6 +301,7 @@ def user_posts(username):
     user = User.query.filter_by(username=username).first_or_404()
     posts = Cycle.query.filter_by(author=user).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
     return render_template('user_posts.html', posts=posts , user=user)
+
 
 
 stripe_keys = {

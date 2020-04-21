@@ -117,3 +117,7 @@ class ResetPasswordForm(FlaskForm):
 class Ratings(FlaskForm):
     rating = IntegerField('Rating')
     submit = SubmitField('Update rating')
+
+class Search(FlaskForm):
+    time = IntegerField('start_time')
+    submit = SubmitField('Search')
