@@ -121,3 +121,7 @@ class Ratings(FlaskForm):
 class Search(FlaskForm):
     time = IntegerField('start_time')
     submit = SubmitField('Search')
+
+class Commenting(FlaskForm):
+    comment = TextAreaField('comment', validators=[DataRequired()])
+    submit = SubmitField('Post')

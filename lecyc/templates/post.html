@@ -12,36 +12,36 @@
                 <div class="card-body">
                     <h4 class="card-title">{{post.title}}</h4>
 
-                    {{post.ratings}} out of 5 
+                    {{post.ratings}} out of 5
                     <br>
                     {% if post.ratings >=1 %}
-                        <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star text-warning"></a>
-                    {% else %} 
-                        <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star"></a>
+                    <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star"></a>
                     {%endif%}
 
                     {% if post.ratings >=2 %}
-                        <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star text-warning"></a>
                     {% else %}
-                        <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star"></a>
+                    <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star"></a>
                     {%endif%}
 
                     {% if post.ratings >=3 %}
-                        <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star text-warning"></a>
-                    {% else %} 
-                        <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star"></a>
+                    <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star"></a>
                     {%endif%}
 
                     {% if post.ratings >=4 %}
-                        <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star text-warning"></a>
-                    {% else %} 
-                        <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star"></a>
+                    <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star"></a>
                     {%endif%}
 
                     {% if post.ratings >=5 %}
-                        <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star text-warning"></a>
-                    {% else %} 
-                        <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star"></a>
+                    <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star"></a>
                     {%endif%}
                 </div>
             </div>
@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>
-        
+
 
         {% if post.author==current_user %}
         <div class="modal-body row">
@@ -128,8 +128,48 @@
             </div>
         </div>
         {% endif %}
+
     </div>
-</div>
+
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Post a comment</legend>
+
+                <div class="form-group">
+                    {{ form.comment.label(class="form-control-label") }}
+                    {% if form.comment.errors %}
+                        {{ form.comment(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.comment.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.comment(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                {{form.submit(class="btn btn-primary")}}
+            </fieldset>
+        </form>
+
+        {%for comm in comments%}
+        <article class="media content-section bg-light">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pic/' + comm.author.image_file) }}">
+            <div class="media-body">
+              <div class="article-metadata">
+                <small class="text-muted">{{ comm.date_posted.strftime('%Y-%m-%d') }}</small>
+              </div>
+              <p class="article-content"><a href="{{url_for('user_posts',username=comm.author.username)}}" class="btn btn-warning">{{ comm.author.name}}</a></p>
+              <p class="article-content">{{ comm.comment }}</p>
+            </div>
+          </article>
+        {%endfor%}
+
+    </div>
+
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock content %}

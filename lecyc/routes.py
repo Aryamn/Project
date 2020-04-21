@@ -2,9 +2,9 @@ import random
 import os
 import stripe
 from PIL import Image
-from lecyc.models import User, Cycle
+from lecyc.models import User, Cycle , Comments
 from lecyc.form import (RegistrationForm, LoginForm, UpdateAccount,
-                        PostForm, RequestResetForm, ResetPasswordForm, Ratings ,Search)
+                        PostForm, RequestResetForm, ResetPasswordForm, Ratings ,Search,Commenting)
 from flask import abort, render_template, url_for, flash, redirect, request
 from lecyc import app, db, bcrypt, mail
 from flask_login import login_user, current_user, logout_user, login_required
@@ -353,8 +353,23 @@ def confirm(post_id):
 @app.route("/post/<post_id>",methods = [ 'GET', 'POST' ])
 @login_required
 def post(post_id):
+
+    form = Commenting()
     post = Cycle.query.get_or_404(post_id)
-    return render_template("post.html", title=post.title, post=post)
+    if form.validate_on_submit() and form.comment.data!=None:
+        comm = Comments(comment=form.comment.data,author=current_user,posting_id=post.id)
+        db.session.add(comm)
+        db.session.commit()
+        flash('Your comment has been added!', 'success')
+        return redirect(url_for('post',post_id=post.id))
+        
+    elif request.method == 'GET':
+        form.comment.data=None
+
+    # Cycle.query.order_by(Cycle.date_posted.desc())
+    comments = Comments.query.filter_by(posting_id=post.id).order_by(Comments.date_posted.desc())
+    
+    return render_template("post.html", title=post.title, post=post,form=form,comments=comments)
 
 @app.route("/post/<post_id>/ratings/<number>",methods = [ 'GET', 'POST' ])
 def star(number,post_id):

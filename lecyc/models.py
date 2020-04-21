@@ -21,6 +21,8 @@ class User(db.Model, UserMixin):
     mobile_no = db.Column(db.Integer, unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     cycles = db.relationship('Cycle', backref='author', lazy=True)
+    comments = db.relationship('Comments', backref='author', lazy=True)
+
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -63,3 +65,10 @@ class Cycle(db.Model):
     lend = db.Column(db.Boolean , default=False)
     status = db.Column(db.Boolean , default=True)
     date_posted = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
+
+class Comments(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    date_posted = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
+    comment = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    posting_id = db.Column(db.Integer)
