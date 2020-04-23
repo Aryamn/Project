@@ -135,7 +135,7 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Post a comment</legend>
+                <legend class="border-bottom mb-4">Update comment</legend>
 
                 <div class="form-group">
                     {{ form.comment.label(class="form-control-label") }}
@@ -166,18 +166,6 @@
                 <p class="article-content"><a href="{{url_for('user_posts',username=comm.author.username)}}"
                         class="btn btn-warning">{{ comm.author.name}}</a></p>
                 <p class="article-content">{{ comm.comment }}</p>
-                {%if comm.author==current_user %}
-                <div class="row">
-                    <div class="col-6">
-                        <a href="{{url_for('commupdate',post_id=post.id,comm_id=comm.id)}}"
-                            class="btn btn-outline-success btn-sm">Update</a>
-                    </div>
-                    <div class="col-6">
-                        <a href="{{url_for('commdel',post_id=post.id,comm_id=comm.id)}}"
-                            class="btn btn-outline-danger btn-sm">Delete</a>
-                    </div>
-                </div>
-                {%endif%}
             </div>
         </article>
         {%endfor%}

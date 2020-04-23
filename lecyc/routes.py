@@ -371,6 +371,45 @@ def post(post_id):
     
     return render_template("post.html", title=post.title, post=post,form=form,comments=comments)
 
+@app.route("/post/<post_id>/<comm_id>/update",methods = [ 'GET', 'POST' ])
+@login_required
+def commupdate(post_id,comm_id):
+
+    form = Commenting()
+    post = Cycle.query.get_or_404(post_id)
+    comm = Comments.query.get_or_404(comm_id)
+
+    if comm.author != current_user:
+        abort(403)
+
+    comments = Comments.query.filter_by(posting_id=post.id).order_by(Comments.date_posted.desc())
+
+
+    if form.validate_on_submit():
+        comm.comment = form.comment.data
+        db.session.commit()
+        flash('Your comment has been updated!', 'success')
+        return redirect(url_for('post',post_id=post.id))
+
+    elif request.method=='GET':
+        form.comment.data = comm.comment
+        
+    return render_template("postcom.html", title=post.title, post=post,form=form,comments=comments,comm_id=comm_id)
+
+@app.route("/post/<post_id>/<comm_id>/delete",methods = [ 'GET', 'POST' ])
+@login_required
+def commdel(post_id,comm_id):
+
+    comm = Comments.query.get_or_404(comm_id)
+
+    if comm.author != current_user:
+        abort(403)
+
+    db.session.delete(comm)
+    db.session.commit()
+    flash('Your comment has been deleted!', 'success')
+    return redirect(url_for('post',post_id=post_id))
+
 @app.route("/post/<post_id>/ratings/<number>",methods = [ 'GET', 'POST' ])
 def star(number,post_id):
     post = Cycle.query.get_or_404(post_id)
