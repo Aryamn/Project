@@ -119,7 +119,7 @@ class Ratings(FlaskForm):
     submit = SubmitField('Update rating')
 
 class Search(FlaskForm):
-    time = IntegerField('start_time')
+    time = IntegerField('start_time',render_kw={"placeholder":"Enter time Eg:2"})
     submit = SubmitField('Search')
 
 class Commenting(FlaskForm):

@@ -12,29 +12,51 @@ from flask_mail import Message
 
 
 @app.route("/")
-@app.route("/home")  # Cycles.order_by(Post.ratings.desc())
+@app.route("/home", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def home():
+    form=Search()
     page = request.args.get('page', 1, type=int)
-    posts = Cycle.query.order_by(Cycle.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts)
 
-@app.route("/home/start_time")  # Cycles.order_by(Post.ratings.desc())
+    if form.validate_on_submit() and form.time.data!=None:
+        posts = Cycle.query.filter_by(time_slot_start=form.time.data).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
+    
+    elif request.method == 'GET':
+        posts = Cycle.query.order_by(Cycle.date_posted.desc()).paginate(page=page, per_page=15)
+        form.time.data=None
+
+    return render_template('home.html', posts=posts,form=form)
+
+@app.route("/home/start_time", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def hometime():
+    form=Search()
     page = request.args.get('page', 1, type=int)
-    posts = Cycle.query.order_by(Cycle.date_avail.desc()).order_by(Cycle.time_slot_start.desc()).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts)
 
-@app.route("/home/ratings")  # Cycles.order_by(Post.ratings.desc())
+    if form.validate_on_submit() and form.time.data!=None:
+        posts = Cycle.query.filter_by(time_slot_start=form.time.data).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
+    
+    else:
+        posts = Cycle.query.order_by(Cycle.date_avail.desc()).order_by(Cycle.time_slot_start.desc()).paginate(page=page, per_page=15)
+    return render_template('home.html', posts=posts,form=form)
+
+@app.route("/home/ratings", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def homerate():
+    form=Search()
     page = request.args.get('page', 1, type=int)
-    posts = Cycle.query.order_by(Cycle.ratings.desc()).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts)
+    if form.validate_on_submit() and form.time.data!=None:
+        posts = Cycle.query.filter_by(time_slot_start=form.time.data).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
+    else:
+        posts = Cycle.query.order_by(Cycle.ratings.desc()).paginate(page=page, per_page=15)
+    return render_template('home.html', posts=posts,form=form)
 
-@app.route("/home/price")  # Cycles.order_by(Post.ratings.desc())
+@app.route("/home/price", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def homeprice():
-    page = request.args.get('page', 1, type=int)
+    form=Search()
+    if form.validate_on_submit() and form.time.data!=None:
+        posts = Cycle.query.filter_by(time_slot_start=form.time.data).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
+    else:
+        page = request.args.get('page', 1, type=int)
     posts = Cycle.query.order_by(Cycle.price).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts,form=form)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -421,3 +443,7 @@ def star(number,post_id):
         post.ratings = int(post.ratings)
     db.session.commit()
     return redirect(url_for('post',post_id=post.id))
+
+
+    
+

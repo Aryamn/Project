@@ -1,6 +1,42 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="mx-auto" style="width: 80rem;">
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <div class="row justify-content-center">
+      <div class="col-2">
+        <div class="form-group">
+          {% if form.time.errors %}
+          {{ form.time(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.time.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %}
+          {{ form.time(class="form-control form-inline bg-light ") }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-10">
+        <div class="form-group">
+          {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+  {%if posts.total==0 %}
+  <div class="jumbotron">
+    <p class="lead">There are no posts available for specified query</p>
+    <hr class="my-4">
+    <p class="lead">
+      <a class="btn btn-outline-info" href="{{url_for('home')}}">Home</a>
+    </p>
+  </div>
+
+  {%else%}
   <div class="card-columns">
     {%for post in posts.items%}
     <div class="card bg-light" style="width: 18rem;">
@@ -29,18 +65,19 @@
   </div>
 
 
-<div class="text-center">
-  {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
-  {% if page_num %}
-  {% if posts.page==page_num %}
-  <a class="btn btn-success" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
-  {%else%}
-  <a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
-  {% endif %}
-  {%else%}
-  ...
-  {% endif %}
-  {% endfor %}
-</div>
+  <div class="text-center">
+    {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+    {% if page_num %}
+    {% if posts.page==page_num %}
+    <a class="btn btn-success" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+    {%else%}
+    <a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+    {% endif %}
+    {%else%}
+    ...
+    {% endif %}
+    {% endfor %}
+    {%endif%}
+  </div>
 </div>
 {% endblock content %}
