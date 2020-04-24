@@ -12,6 +12,11 @@ from flask_mail import Message
 
 
 @app.route("/")
+def ret():
+    return redirect(url_for('home'))
+
+
+
 @app.route("/home", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def home():
     form=Search()

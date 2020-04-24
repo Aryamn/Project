@@ -57,7 +57,7 @@ class Cycle(db.Model):
     features = db.Column(db.Text)
     reg_no = db.Column(db.String(20), nullable=False, unique=True)
     image_file = db.Column(db.String(20), nullable=False,
-                           default='default.jpg')
+                           default='default.png')
     price = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     ratings = db.Column(db.Integer , default = 0)
