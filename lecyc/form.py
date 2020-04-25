@@ -36,6 +36,19 @@ class RegistrationForm(FlaskForm):
         if error:
             raise ValidationError("Email is taken . Please choose another")
             # print("Username is taken . Please choose another")
+
+    def validate_roll_no(self,roll_no):
+       
+        error = User.query.filter_by(roll_no=roll_no.data).first()
+
+        if error:
+            raise ValidationError("Roll number is taken . Please check it carefully")
+
+    def validate_mobile_no(self,mobile_no):
+        error = User.query.filter_by(mobile_no=mobile_no.data).first()
+
+        if error:
+            raise ValidationError("Mobile number is taken . Please check it carefully")
             
 
 class LoginForm(FlaskForm):
@@ -65,7 +78,7 @@ class UpdateAccount(FlaskForm):
             user = User.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError("Username is taken . Please choose another")
-                # print("Username is taken . Please choose another")
+               
 
     def validate_email(self,email):
         if email.data != current_user.email:
@@ -73,7 +86,21 @@ class UpdateAccount(FlaskForm):
 
             if error:
                 raise ValidationError("Email is taken . Please choose another")
-                # print("Username is taken . Please choose another")
+
+    def validate_roll_no(self,roll_no):
+        if roll_no.data != current_user.roll_no:
+            error = User.query.filter_by(roll_no=roll_no.data).first()
+
+            if error:
+                raise ValidationError("Roll number is taken . Please check it carefully")
+
+    def validate_mobile_no(self,mobile_no):
+        if mobile_no.data != current_user.mobile_no:
+            error = User.query.filter_by(mobile_no=mobile_no.data).first()
+
+            if error:
+                raise ValidationError("Mobile number is taken . Please check it carefully")
+                
             
         
 class PostForm(FlaskForm):
