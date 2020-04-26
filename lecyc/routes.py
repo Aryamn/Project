@@ -1,4 +1,5 @@
 import random
+import math
 import os
 import stripe
 from PIL import Image
@@ -29,7 +30,8 @@ def home():
         posts = Cycle.query.order_by(Cycle.date_posted.desc()).paginate(page=page, per_page=15)
         form.time.data=None
 
-    return render_template('home.html', posts=posts,form=form)
+    rows = math.ceil(posts.total/4)
+    return render_template('home.html', posts=posts,form=form,rows=rows)
 
 @app.route("/home/start_time", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def hometime():
@@ -41,7 +43,10 @@ def hometime():
     
     else:
         posts = Cycle.query.order_by(Cycle.date_avail.desc()).order_by(Cycle.time_slot_start.desc()).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts,form=form)
+        
+    rows = math.ceil(posts.total/4)
+
+    return render_template('home.html', posts=posts,form=form,rows=rows)
 
 @app.route("/home/ratings", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def homerate():
@@ -51,7 +56,10 @@ def homerate():
         posts = Cycle.query.filter_by(time_slot_start=form.time.data).order_by(Cycle.date_avail.desc()).paginate(page=page, per_page=15)
     else:
         posts = Cycle.query.order_by(Cycle.ratings.desc()).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts,form=form)
+    
+    rows = math.ceil(posts.total/4)
+
+    return render_template('home.html', posts=posts,form=form,rows=rows)
 
 @app.route("/home/price", methods=['GET', 'POST'])  # Cycles.order_by(Post.ratings.desc())
 def homeprice():
@@ -61,7 +69,10 @@ def homeprice():
     else:
         page = request.args.get('page', 1, type=int)
     posts = Cycle.query.order_by(Cycle.price).paginate(page=page, per_page=15)
-    return render_template('home.html', posts=posts,form=form)
+    
+    rows = math.ceil(posts.total/4)
+    
+    return render_template('home.html', posts=posts,form=form,rows=rows)
 
 
 @app.route("/register", methods=['GET', 'POST'])

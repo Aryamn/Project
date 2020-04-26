@@ -28,15 +28,24 @@
     font-size: 2.5rem;
   }
 
-  .card-columns {
-    @include media-breakpoint-only(md) {
-      column-count: 2;
-    }
-    @include media-breakpoint-only(xl) {
-      column-count: 3;
-    }
+  .fa {
+    padding: 20px;
+    font-size: 30px;
+    width: 50px;
+    text-align: center;
+    text-decoration: none;
+  }
 
-    @include media-breakpoint-only(sm) {
-        column-count: 1;
-      }
+  .fa:hover {
+    opacity: 0.7;
+  }
+
+  .fa-facebook {
+    background: #3B5998;
+    color: white;
+  }
+
+  .fa-twitter {
+    background: #55ACEE;
+    color: white;
   }
