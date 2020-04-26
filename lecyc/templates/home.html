@@ -39,7 +39,7 @@
   {%else%}
   <div class="card-columns">
     {%for post in posts.items%}
-    <div class="card bg-light" style="width: 18rem;">
+    <div class="card bg-light mb-5" style="width: 18rem;">
       <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
         style="width:100% ; height:250px;">
       <div class="card-body">
