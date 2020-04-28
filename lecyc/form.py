@@ -94,12 +94,12 @@ class UpdateAccount(FlaskForm):
             if error:
                 raise ValidationError("Roll number is taken . Please check it carefully")
 
-    def validate_mobile_no(self,mobile_no):
-        if mobile_no.data != current_user.mobile_no:
-            error = User.query.filter_by(mobile_no=mobile_no.data).first()
+    # def validate_mobile_no(self,mobile_no):
+    #     if mobile_no.data != current_user.mobile_no:
+    #         error = User.query.filter_by(mobile_no=mobile_no.data).first()
 
-            if error:
-                raise ValidationError("Mobile number is taken . Please check it carefully")
+    #         if error:
+    #             raise ValidationError("Mobile number is taken . Please check it carefully")
                 
             
         
