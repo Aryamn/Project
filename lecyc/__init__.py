@@ -17,7 +17,7 @@ app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = "jainaryaman123@gmail.com"
-app.config['MAIL_PASSWORD'] = "Vicky26jan"
+app.config['MAIL_PASSWORD'] = "Your_password"
 mail = Mail(app)
 
 from lecyc import routes
