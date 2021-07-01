@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="mx-auto" style="width: 80rem;">
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <div class="row justify-content-center">
+      <div class="col-2">
+        <div class="form-group">
+          {% if form.time.errors %}
+          {{ form.time(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.time.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %}
+          {{ form.time(class="form-control form-inline bg-light ") }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-10">
+        <div class="form-group">
+          {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+  {%if posts.total==0 %}
+  <div class="jumbotron">
+    <p class="lead">There are no posts available for specified query</p>
+    <hr class="my-4">
+    <p class="lead">
+      <a class="btn btn-outline-info" href="{{url_for('home')}}">Home</a>
+    </p>
+  </div>
+
+  {%else%}
+  <!-- <div class="card-columns">
+    {%for post in posts.items%}
+    <div class="card bg-light mb-5" style="width: 18rem;">
+      <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ post.image_file)}}" alt="Card image"
+        style="width:100% ; height:250px;">
+      <div class="card-body">
+        <h5 class="card-title">{{post.title}}</h5>
+        <div class="row">
+          <div class="col">
+            <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-primary">Details</a>
+          </div>
+          <div class="col">
+            <a href="{{url_for('post' , post_id = post.id)}}" class="btn btn-dark">{{post.price}} Rs/hr</a>
+          </div>
+        </div>
+        <p class="card-text"></p>
+        <p class="card-text"><small class="text-muted">{{post.author.hall}}</small>
+          <br>
+          <small class="text-muted">
+            {{post.time_slot_start}} {{post.time_slot_meri_start}} - {{post.time_slot_end}} {{post.time_slot_meri_end}}
+          </small>
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div> -->
+
+  {%for i in range(0,rows)%}
+  <div class="row">
+    {%for j in range(0,4)%}
+    <div class="col-3">
+      {% if posts.items[4*i+j]!=Null %}
+
+      <div class="card bg-light mb-5" style="width: 18rem;">
+        <img class="card-img-top" src="{{url_for('static' , filename = 'post_pic/'+ posts.items[4*i+j].image_file)}}" alt="Card image"
+          style="width:100% ; height:250px;">
+        <div class="card-body">
+          <h5 class="card-title">{{posts.items[4*i+j].title}}</h5>
+          <div class="row">
+            <div class="col">
+              <a href="{{url_for('post' , post_id = posts.items[4*i+j].id)}}" class="btn btn-primary">Details</a>
+            </div>
+            <div class="col">
+              <a href="{{url_for('post' , post_id = posts.items[4*i+j].id)}}" class="btn btn-dark">{{posts.items[4*i+j].price}} Rs/hr</a>
+            </div>
+          </div>
+          <p class="card-text"></p>
+          <p class="card-text"><small class="text-muted">{{posts.items[4*i+j].author.hall}}</small>
+            <br>
+            <small class="text-muted">
+              {{posts.items[4*i+j].time_slot_start}} {{posts.items[4*i+j].time_slot_meri_start}} - {{posts.items[4*i+j].time_slot_end}} {{posts.items[4*i+j].time_slot_meri_end}}
+            </small>
+          </p>
+        </div>
+      </div>
+
+
+      {%endif%}
+    </div>
+    {%endfor%}
+  </div>
+  {% endfor %}
+
+  <div class="text-center">
+    {% for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+    {% if page_num %}
+    {% if posts.page==page_num %}
+    <a class="btn btn-success" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+    {%else%}
+    <a class="btn btn-light" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+    {% endif %}
+    {%else%}
+    ...
+    {% endif %}
+    {% endfor %}
+    {%endif%}
+  </div>
+</div>
+{% endblock content %}

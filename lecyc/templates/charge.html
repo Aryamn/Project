@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4 text-center"> Thank You :) </h1>
+    <p class="lead">Press to go to home</p>
+    <a class="btn btn-info btn-lg" href="{{url_for('home')}}" role="button">Home</a>
+  </div>
+</div>
+{% endblock content %}

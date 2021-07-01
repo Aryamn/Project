@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div>
+    <div class="modal-body row">
+        <div class="col-lg-8 text-center ">
+            <img src="{{url_for('static' , filename = 'post_pic/' + post.image_file)}}" class="rounded img-fluid"
+                style="width: 100rem; height: 600px;">
+        </div>
+        <div class="col-lg-4  ">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{post.title}}</h4>
+
+                    {{post.ratings}} out of 5
+                    <br>
+                    {% if post.ratings >=1 %}
+                    <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=1,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=2 %}
+                    <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=2,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=3 %}
+                    <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=3,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=4 %}
+                    <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=4,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+
+                    {% if post.ratings >=5 %}
+                    <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star text-warning"></a>
+                    {% else %}
+                    <a href="{{url_for('star',number=5,post_id=post.id)}}" class="fa fa-star"></a>
+                    {%endif%}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title font-weight-bold text-info">{{post.price}} Rs/hr</h4>
+                    {% if (post.author!=current_user) and (post.status==True) %}
+                    <a href="{{url_for('payment', post_id=post.id)}} " class="btn btn-success">Make a Payment</a>
+                    {% endif %}
+
+                    {% if (post.author==current_user) and (post.status==False) %}
+                    <a href="{{url_for('confirm', post_id=post.id)}} " class="btn btn-info">Returned</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title font-weight-bold text-info">Description</h4>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Available Date:
+                        </small>
+                        {{post.date_avail}} / {{post.month_avail}} / 2020
+                        <br>
+                        <small class="text-muted">
+                            Timings:
+                        </small>
+                        {{post.time_slot_start}} {{post.time_slot_meri_start}} - {{post.time_slot_end}}
+                        {{post.time_slot_meri_end}}
+                        <br>
+                        <small class="text-muted">
+                            Registration No.:
+                        </small>
+                        {{post.reg_no}}
+                        <br>
+                        <small class="text-muted">
+                            Status:
+                        </small>
+                        {% if post.sell%}
+                        Sell
+                        {% else %}
+                        Lend
+                        {% endif%}
+                        <br>
+                        <small class="text-muted">
+                            Hall:
+                        </small>
+                        {{post.author.hall}}
+                    </p>
+                    <p class="card-text">{{post.features}}</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="card-title font-weight-bold text-info">Seller Description</h4>
+                    <div class="row">
+                        <div class="col-xl-3 text-left">
+                            <img class="rounded-circle article-img"
+                                src="{{ url_for('static', filename='profile_pic/' + post.author.image_file) }}">
+                        </div>
+                        <div class="col-xl-8">
+                            <p class="card-text">{{post.author.name}}
+                                <br>{{post.author.mobile_no}}</p>
+                        </div>
+                    </div>
+                    <a href="{{url_for('user_posts', username=post.author.username)}} "
+                        class="btn btn-dark btn-block">For more Info</a>
+                </div>
+            </div>
+        </div>
+
+
+        {% if post.author==current_user %}
+        <div class="modal-body row">
+            <div class="col-6">
+                <a href="{{url_for('update_post', post_id=post.id)}} " class="btn btn-success">Update</a>
+            </div>
+            <div class="col-6 text-right">
+                <a href="{{url_for('delete_post', post_id=post.id)}} " class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Post a comment</legend>
+
+                <div class="form-group">
+                    {{ form.comment.label(class="form-control-label") }}
+                    {% if form.comment.errors %}
+                    {{ form.comment(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.comment.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.comment(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                {{form.submit(class="btn btn-primary")}}
+            </fieldset>
+        </form>
+
+        {%for comm in comments%}
+        <article class="media content-section bg-light">
+            <img class="rounded-circle article-img"
+                src="{{ url_for('static', filename='profile_pic/' + comm.author.image_file) }}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <small class="text-muted">{{ comm.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <p class="article-content"><a href="{{url_for('user_posts',username=comm.author.username)}}"
+                        class="btn btn-warning">{{ comm.author.name}}</a></p>
+                <p class="article-content">{{ comm.comment }}</p>
+                {%if comm.author==current_user %}
+                <div class="row">
+                    <div class="col-6">
+                        <a href="{{url_for('commupdate',post_id=post.id,comm_id=comm.id)}}"
+                            class="btn btn-outline-success btn-sm">Update</a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{url_for('commdel',post_id=post.id,comm_id=comm.id)}}"
+                            class="btn btn-outline-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+                {%endif%}
+            </div>
+        </article>
+        {%endfor%}
+
+    </div>
+
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock content %}
